@@ -29,7 +29,7 @@
       "use": "@vercel/node"
     },
     {
-      "src": "Frontend/**/*",
+      "src": "Frontend/**",
       "use": "@vercel/static"
     }
   ],
@@ -41,6 +41,10 @@
     {
       "src": "/uploads/(.*)",
       "dest": "Backend/uploads/$1"
+    },
+    {
+      "src": "/",
+      "dest": "Frontend/index.html"
     },
     {
       "src": "/(.*)",
