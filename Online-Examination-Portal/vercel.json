@@ -2,22 +2,25 @@
   "version": 2,
   "builds": [
     {
-      "src": "Online-Examination-Portal/Backend/api/index.js",
+      "src": "Backend/api/index.js",
       "use": "@vercel/node"
     },
     {
-      "src": "Online-Examination-Portal/Frontend/**",
+      "src": "Frontend/**",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "Online-Examination-Portal/Backend/api/index.js"
+      "dest": "Backend/api/index.js"
+    },
+    {
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
-      "dest": "Online-Examination-Portal/Frontend/$1"
+      "dest": "Frontend/$1"
     }
   ]
 }
