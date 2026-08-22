@@ -38,14 +38,14 @@
       "src": "/api/(.*)",
       "dest": "Backend/api/index.js"
     },
-    {
-      "src": "/uploads/(.*)",
-      "dest": "Backend/uploads/$1"
-    },
-    {
-      "src": "/",
-      "dest": "Frontend/index.html"
-    },
+    // {
+    //   "src": "/uploads/(.*)",
+    //   "dest": "Backend/uploads/$1"
+    // },
+    // {
+    //   "src": "/",
+    //   "dest": "Frontend/index.html"
+    // },
     {
       "src": "/(.*)",
       "dest": "Frontend/$1"
