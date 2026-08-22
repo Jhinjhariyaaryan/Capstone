@@ -110,6 +110,9 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Static Folder for Uploads (Local development)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Img folder serve static
+app.use('/Img', express.static(path.join(__dirname, 'Img')));
+
 // Routes
 app.use('/api/auth', require('./Routes/AuthRoutes'));
 app.use('/api/exams', require('./Routes/ExamRoutes'));
