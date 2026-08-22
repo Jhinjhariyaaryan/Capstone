@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ExamPortal</title>
+  
+  <!-- FontAwesome & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="Style.css">
+
+  <style>
+    /* Login Page Styling */
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #e0e7ff;
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --input-bg: #f8fafc;
+      --input-border: #e2e8f0;
+      --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    #login-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--bg-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+
+    .glow-1, .glow-2 {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      z-index: 0;
+      opacity: 0.6;
+      animation: float 8s ease-in-out infinite alternate;
+    }
+
+    .glow-1 {
+      width: 350px;
+      height: 350px;
+      background: #6366f1;
+      top: 10%;
+      left: 15%;
+    }
+
+    .glow-2 {
+      width: 300px;
+      height: 300px;
+      background: #a855f7;
+      bottom: 10%;
+      right: 15%;
+      animation-delay: -4s;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(30px, 30px) scale(1.1); }
+    }
+
+    .login-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 1000px;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      box-shadow: var(--shadow), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+      min-height: 600px;
+    }
+
+    .login-banner {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      padding: 48px;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .banner-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .banner-logo i {
+      font-size: 28px;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 10px;
+      border-radius: 12px;
+    }
+
+    .banner-content { margin: auto 0; }
+    .banner-content h1 { font-size: 32px; font-weight: 800; line-height: 1.2; margin-bottom: 16px; }
+    .banner-content p { font-size: 15px; color: rgba(255, 255, 255, 0.85); line-height: 1.6; }
+    .banner-features { list-style: none; margin-top: 24px; }
+    .banner-features li { display: flex; align-items: center; gap: 10px; font-size: 14px; margin-bottom: 10px; }
+    .banner-features i { color: #4ade80; }
+    .banner-footer { font-size: 13px; color: rgba(255, 255, 255, 0.6); }
+
+    .login-form-section { padding: 48px; display: flex; flex-direction: column; justify-content: center; }
+    .form-header { margin-bottom: 32px; }
+    .form-header h2 { font-size: 26px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; }
+    .form-header p { font-size: 14px; color: var(--text-muted); }
+
+    .role-selector {
+      display: flex;
+      background: var(--input-bg);
+      padding: 4px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      border: 1px solid var(--input-border);
+    }
+
+    .role-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .role-btn.active {
+      background: #ffffff;
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 8px; }
+    
+    .input-wrapper { position: relative; display: flex; align-items: center; }
+    .input-wrapper i.field-icon { position: absolute; left: 16px; color: var(--text-muted); font-size: 16px; }
+    .input-wrapper input {
+      width: 100%;
+      padding: 14px 16px 14px 44px;
+      font-size: 14px;
+      background: var(--input-bg);
+      border: 1.5px solid var(--input-border);
+      border-radius: 12px;
+      outline: none;
+      color: var(--text-main);
+      transition: all 0.2s ease;
+    }
+
+    .input-wrapper input:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 4px var(--primary-light);
+    }
+
+    .toggle-password { position: absolute; right: 16px; color: var(--text-muted); cursor: pointer; font-size: 16px; }
+
+    .form-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      font-size: 13px;
+    }
+
+    .remember-me { display: flex; align-items: center; gap: 8px; color: var(--text-muted); cursor: pointer; }
+    .remember-me input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary); }
+    .forgot-pass { color: var(--primary); text-decoration: none; font-weight: 600; }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    .submit-btn:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    .form-footer { text-align: center; margin-top: 24px; font-size: 13px; color: var(--text-muted); }
+    .form-footer a { color: var(--primary); font-weight: 600; text-decoration: none; }
+
+    @media (max-width: 850px) {
+      .login-container { grid-template-columns: 1fr; max-width: 480px; }
+      .login-banner { display: none; }
+      .login-form-section { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Login Overlay Section -->
+  <div id="login-screen">
+    <div class="glow-1"></div>
+    <div class="glow-2"></div>
+
+    <div class="login-container">
+      <div class="login-banner">
+        <div class="banner-logo">
+          <i class="fa-solid fa-graduation-cap"></i>
+          <span>ExamPortal</span>
+        </div>
+
+        <div class="banner-content">
+          <h1>Welcome Back to Your Exam Hub</h1>
+          <p>Access your upcoming examinations, real-time performance analytics, and official certificates seamlessly.</p>
+          
+          <ul class="banner-features">
+            <li><i class="fa-solid fa-circle-check"></i> Secure & Proctored Test Environment</li>
+            <li><i class="fa-solid fa-circle-check"></i> Instant Detailed Result Analysis</li>
+            <li><i class="fa-solid fa-circle-check"></i> Verified Digital PDF Certificates</li>
+          </ul>
+        </div>
+
+        <div class="banner-footer">
+          © 2026 ExamPortal System. All rights reserved.
+        </div>
+      </div>
+
+      <div class="login-form-section">
+        <div class="form-header">
+          <h2>Sign In to ExamPortal</h2>
+          <p>Please enter your credentials to access your dashboard</p>
+        </div>
+
+        <div class="role-selector">
+          <button type="button" class="role-btn active" onclick="setRole('student', this)">
+            <i class="fa-solid fa-user-graduate"></i> Student
+          </button>
+          <button type="button" class="role-btn" onclick="setRole('faculty', this)">
+            <i class="fa-solid fa-chalkboard-user"></i> Faculty
+          </button>
+        </div>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label for="userIdentifier" id="inputLabel">Student ID or Email</label>
+            <div class="input-wrapper">
+              <input type="text" id="userIdentifier" placeholder="e.g. STU2025001 or name@gmail.com" required>
+              <i class="fa-solid fa-id-card field-icon"></i>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="password" placeholder="••••••••••••" required>
+              <i class="fa-solid fa-lock field-icon"></i>
+              <i class="fa-solid fa-eye toggle-password" id="passwordToggle" onclick="togglePasswordVisibility()"></i>
+            </div>
+          </div>
+
+          <div class="form-options">
+            <label class="remember-me">
+              <input type="checkbox" id="rememberMe">
+              <span>Remember me</span>
+            </label>
+            <a href="#" class="forgot-pass" onclick="alert('Contact support@examportal.com to reset password.')">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            <span>Login to Dashboard</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </form>
+
+        <div class="form-footer">
+          Need help? Contact <a href="mailto:support@examportal.com">ExamPortal Support</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Dashboard Application -->
+  <div class="sidebar">
+    <div class="logo">
+      <i class="fa-solid fa-graduation-cap"></i>
+      <h2>ExamPortal</h2>
+    </div>
+    <ul>
+      <li id="nav-dashboard" class="active" onclick="showPage('dashboard')">Dashboard</li>
+      <li id="nav-myExams" onclick="showPage('myExams')">My Exams</li>
+      <li id="nav-results" onclick="showPage('results')">Results</li>
+      <li id="nav-profile" onclick="showPage('profile')">Profile</li>
+      <li id="nav-settings" onclick="showPage('settings')">Settings</li>
+      <li id="nav-help" onclick="showPage('help')">Help & Support</li>
+      <li id="nav-logout" onclick="showPage('logout')">Logout</li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <!-- Dashboard Page -->
+    <section id="dashboard" class="page active">
+      <button id="themeToggle" class="theme-btn" onclick="toggleTheme()">🌙 Dark Mode</button>
+      
+      <div class="greeting-banner">
+        <h1 id="greeting">Welcome!</h1>
+        <p>Your gateway to seamless online examinations.</p>
+      </div>
+
+      <div class="dashboard-banner">
+        <div class="banner-left">
+          <div class="dashboard-stats">
+            <div class="stat-card blue">
+              <div>
+                <h2 id="upcomingCount">0</h2>
+                <p>Upcoming Exams</p>
+              </div>
+              <i class="fa-solid fa-calendar-days"></i>
+            </div>
+            <div class="stat-card orange">
+              <div>
+                <h2 id="progressCount">0</h2>
+                <p>In Progress</p>
+              </div>
+              <i class="fa-solid fa-hourglass-half"></i>
+            </div>
+            <div class="stat-card green">
+              <div>
+                <h2 id="completedCount">0</h2>
+                <p>Completed</p>
+              </div>
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h2>Upcoming Exams</h2>
+      <div class="exam-list" id="dashboardExamList">
+        <p>Loading active exams...</p>
+      </div>
+
+      <h2>Recent Results</h2>
+      <div class="result-list" id="dashboardRecentResults">
+        <div class="exam-item">
+            <span>Web Technologies</span>
+            <strong style="color:green;">85%</strong>
+        </div>
+        <div class="exam-item">
+            <span>Computer Networks</span>
+            <strong style="color:orange;">78%</strong>
+        </div>
+        <div class="exam-item">
+            <span>Python Programming</span>
+            <strong style="color:green;">92%</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- My Exams Page -->
+    <section id="myExams" class="page">
+      <h1>My Exams</h1>
+      <div class="exam-list" id="myExamsList">
+        <p>Loading exams list...</p>
+      </div>
+    </section>
+
+    <!-- Instructions Page -->
+    <section id="instructions" class="page">
+      <h1>Exam Instructions</h1>
+      <h3 id="instructionExamTitle">Exam Title</h3>
+      <p>Please read all instructions carefully before starting:</p>
+      <ul>
+        <li>Do not switch tabs or minimize the browser during the exam. Tab switches are logged automatically.</li>
+        <li>Copy and paste functionalities are strictly disabled.</li>
+        <li>The exam will auto-submit when the countdown timer reaches 00:00:00.</li>
+      </ul>
+      
+      <div id="paymentContainer" style="margin: 20px 0; display: none;">
+        <label><b>Registration Fee Required: $</b><span id="examFeeDisplay">0</span></label><br><br>
+        <input type="text" id="waiverCodeInput" placeholder="Enter Waiver Code (if any)" style="padding:8px; width:220px;">
+        <button onclick="applyWaiverCode()">Apply Waiver Code</button>
+        <button onclick="initiateStripeCheckout()" style="background-color:#6772e5;">Pay with Stripe</button>
+      </div>
+
+      <button id="startExamBtn" onclick="startSelectedExam()">Proceed to Exam</button>
+    </section>
+
+    <!-- Exam Interface Page -->
+    <section id="exam" class="page">
+      <h1 id="activeExamTitle">Exam Title</h1>
+      <div class="timer">Time Left: <span id="timer">00:00:00</span></div>
+      
+      <div class="question" id="questionContainer">
+        <p id="qText">Q1: Question will render here...</p>
+        <div class="options" id="optionsContainer"></div>
+      </div>
+
+      <div class="exam-controls">
+        <button onclick="navigateQuestion(-1)">Previous</button>
+        <button onclick="navigateQuestion(1)">Next</button>
+        <button onclick="submitExamBackend()" style="background-color: #22c55e;">Submit Exam</button>
+      </div>
+    </section>
+
+    <!-- Results Page -->
+    <section id="results" class="page">
+      <div class="container">
+        <div class="card">
+          <div class="top">
+            <div class="left">
+              <div class="icon"><i class="fa-solid fa-file-lines"></i></div>
+              <div>
+                <h2 id="resExamTitle">Data Structures and Algorithms</h2>
+                 <p id="resExamDateTime" style="font-size: 14px; color: #666; margin-top: 5px;">
+                  <i class="fa-solid fa-calendar-days"></i> <span id="resDate">20 May 2026</span> &nbsp;&nbsp;
+                  <i class="fa-solid fa-clock"></i> <span id="resTime">10:00 AM - 12:00 PM</span>
+                 </p>
+              </div>
+            </div>
+            <div class="score">
+              <h4>Score</h4>
+              <h2 id="resScore">0%</h2>
+            </div>
+          </div>
+
+          <div class="stats">
+            <div class="box"><p>Total Questions</p><h2 id="resTotal">0</h2></div>
+            <div class="box"><p>Attempted</p><h2 id="resAttempted">0</h2></div>
+            <div class="box"><p>Correct</p><h2 id="resCorrect" class="aryan">0</h2></div>
+            <div class="box"><p>Incorrect</p><h2 id="resIncorrect" class="red">0</h2></div>
+          </div>
+
+          <div class="buttons">
+            <button class="solution-btn" onclick="toggleSolution()"><i class="fa-solid fa-angle-down"></i> View Solutions</button>
+            <button class="download-btn" onclick="downloadPDFCertificate()"><i class="fa-solid fa-download"></i> Download Certificate</button>
+          </div>
+
+          <div class="solution" id="solution">
+            <h3>Solutions Breakdown</h3>
+            <div id="solutionContainer"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Profile Page -->
+    <div id="profile" class="page">
+      <h2>👤 My Profile</h2>
+      <div class="card">
+        <div class="profile-card">
+          <img src="https://i.pinimg.com/564x/57/00/c0/5700c04197ee9a4372a35ef16eb78f4e.jpg" id="profilePic" alt="Profile">
+          <h2 id="showName">Aryan Jhinjhariya</h2>
+          <p><b>Student ID:</b> <span id="showId">STU2025001</span></p>
+          <p><b>Email:</b> <span id="showEmail">aryan@gmail.com</span></p>
+          <p><b>Course:</b> <span id="showCourse">B.Tech</span></p>
+          <p><b>Semester:</b> <span id="showSemester">5th</span></p>
+          <button id="editBtn">Edit Profile</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal" id="profileModal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Edit Profile</h2>
+        <label>Name</label><input type="text" id="nameInput"> 
+        <label>Student ID</label><input type="text" id="idInput">
+        <label>Email</label><input type="email" id="emailInput">
+        <label>Course</label><input type="text" id="courseInput">
+        <label>Semester</label><input type="text" id="semesterInput">
+        <label>Profile Image</label><input type="file" id="imageInput" accept="image/*">
+        <button id="saveBtn">Save Changes</button>
+      </div>
+    </div>
+
+    <!-- Settings Page -->
+    <div id="settings" class="page">
+      <h2>⚙ Settings</h2>
+      <div class="card">
+        <label><input type="checkbox" id="notificationToggle" checked> Enable Notifications</label><br><br>
+        <label><input type="checkbox" id="soundToggle" checked> Exam Sound</label><br><br>
+        <button onclick="toggleTheme()">🌙 Change Theme</button>
+      </div>
+    </div>
+
+    <!-- Help & Support Page -->
+    <div id="help" class="page">
+      <h2>❓ Help & Support</h2>
+      <div class="card">
+        <h3>Frequently Asked Questions</h3>
+        <p><b>Q.</b> How do I start an exam?</p>
+        <p>Click the <b>Start Exam</b> button on your dashboard.</p>
+        <hr>
+        <p><b>Email:</b> support@examportal.com</p>
+        <p><b>Phone:</b> +91 9876543210</p>
+      </div>
+    </div>
+
+    <!-- Logout Page -->
+    <div id="logout" class="page">
+      <h2>
+        <img src="https://www.svgrepo.com/show/506720/logout.svg" alt="" style="width: 24px; height: 24px; vertical-align: middle; margin-right: 0px;">
+        Logout
+      </h2>
+      <div class="card">
+        <h3>Do you really want to logout?</h3><br>
+        <button onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./Script.js"></script>
+
+  <!-- Login Logic -->
+  <script>
+    let currentRole = 'student';
+
+    function setRole(role, element) {
+      currentRole = role;
+      document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+      element.classList.add('active');
+
+      const label = document.getElementById('inputLabel');
+      const input = document.getElementById('userIdentifier');
+
+      if (role === 'student') {
+        label.innerText = 'Student ID or Email';
+        input.placeholder = 'e.g. STU2025001 or name@gmail.com';
+      } else {
+        label.innerText = 'Faculty ID or Email';
+        input.placeholder = 'e.g. FAC2025099 or faculty@examportal.com';
+      }
+    }
+
+    function togglePasswordVisibility() {
+      const passwordInput = document.getElementById('password');
+      const toggleIcon = document.getElementById('passwordToggle');
+
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+      }
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      // Hide the login screen overlay to show the dashboard
+      document.getElementById('login-screen').style.display = 'none';
+    }
+
+    // Function to handle logout and show the login overlay back
+    function logout() {
+      document.getElementById('login-screen').style.display = 'flex';
+    }
+  </script>
+</body>
+</html>
